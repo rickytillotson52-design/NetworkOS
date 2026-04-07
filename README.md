@@ -39,6 +39,7 @@ copy .env.example .env.local
 ```env
 NEXT_PUBLIC_SUPABASE_URL=your-project-url
 NEXT_PUBLIC_SUPABASE_ANON_KEY=your-anon-key
+NEXT_PUBLIC_APP_URL=http://localhost:3000
 ```
 
 4. Apply the SQL migration in `supabase/migrations/20260406213000_initial_crm_schema.sql` to your Supabase project.
@@ -59,5 +60,8 @@ npm run dev
 ## Deployment Notes
 
 - Add the same environment variables to Vercel.
+- In Supabase Auth, set your redirect URLs to include:
+  - `https://networkos-chi.vercel.app/auth/callback`
+  - `http://localhost:3000/auth/callback`
 - Connect the GitHub repository to Vercel for preview and production deployments.
 - Keep Supabase anon keys client-safe and never expose service-role credentials in the browser.

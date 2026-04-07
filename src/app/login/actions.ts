@@ -2,6 +2,7 @@
 
 import { redirect } from "next/navigation";
 
+import { getAppUrl } from "@/lib/env";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 import type { FormState } from "@/lib/types";
 import { authSchema } from "@/lib/validation";
@@ -35,7 +36,13 @@ export async function authAction(
   const { mode, email, password } = parsed.data;
 
   if (mode === "signup") {
-    const { error } = await supabase.auth.signUp({ email, password });
+    const { error } = await supabase.auth.signUp({
+      email,
+      password,
+      options: {
+        emailRedirectTo: `${getAppUrl()}/auth/callback`,
+      },
+    });
 
     if (error) {
       return { error: error.message };
