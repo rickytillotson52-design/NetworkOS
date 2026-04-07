@@ -2,13 +2,21 @@ import { z } from "zod";
 
 import { interactionTypes, relationshipStatuses } from "@/lib/constants";
 
-export const authSchema = z.object({
-  mode: z.enum(["login", "signup"]),
-  email: z.email("Enter a valid email address."),
-  password: z
-    .string()
-    .min(8, "Password should be at least 8 characters long."),
-});
+export const authSchema = z
+  .object({
+    mode: z.enum(["login", "magic"]),
+    email: z.email("Enter a valid email address."),
+    password: z.string().optional(),
+  })
+  .superRefine((value, ctx) => {
+    if (value.mode === "login" && (!value.password || value.password.length < 8)) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        path: ["password"],
+        message: "Password should be at least 8 characters long.",
+      });
+    }
+  });
 
 export const contactSchema = z.object({
   first_name: z.string().trim().min(1, "First name is required."),

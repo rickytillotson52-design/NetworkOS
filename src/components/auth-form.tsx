@@ -10,7 +10,7 @@ import type { FormState } from "@/lib/types";
 const initialState: FormState = {};
 
 export function AuthForm() {
-  const [mode, setMode] = useState<"login" | "signup">("login");
+  const [mode, setMode] = useState<"login" | "magic">("magic");
   const [state, formAction] = useActionState(authAction, initialState);
 
   return (
@@ -18,17 +18,17 @@ export function AuthForm() {
       <div className="flex flex-wrap items-center gap-3">
         <button
           type="button"
-          className={`btn ${mode === "login" ? "btn-primary" : "btn-secondary"}`}
-          onClick={() => setMode("login")}
+          className={`btn ${mode === "magic" ? "btn-primary" : "btn-secondary"}`}
+          onClick={() => setMode("magic")}
         >
-          Log in
+          Magic link
         </button>
         <button
           type="button"
-          className={`btn ${mode === "signup" ? "btn-primary" : "btn-secondary"}`}
-          onClick={() => setMode("signup")}
+          className={`btn ${mode === "login" ? "btn-primary" : "btn-secondary"}`}
+          onClick={() => setMode("login")}
         >
-          Sign up
+          Password login
         </button>
       </div>
 
@@ -49,20 +49,24 @@ export function AuthForm() {
           <p className="text-sm text-rose-700">{state.fieldErrors.email[0]}</p>
         ) : null}
 
-        <label className="grid gap-2 text-sm font-medium">
-          Password
-          <input
-            className="field"
-            type="password"
-            name="password"
-            placeholder="At least 8 characters"
-            required
-          />
-        </label>
-        {state.fieldErrors?.password ? (
-          <p className="text-sm text-rose-700">
-            {state.fieldErrors.password[0]}
-          </p>
+        {mode === "login" ? (
+          <>
+            <label className="grid gap-2 text-sm font-medium">
+              Password
+              <input
+                className="field"
+                type="password"
+                name="password"
+                placeholder="At least 8 characters"
+                required
+              />
+            </label>
+            {state.fieldErrors?.password ? (
+              <p className="text-sm text-rose-700">
+                {state.fieldErrors.password[0]}
+              </p>
+            ) : null}
+          </>
         ) : null}
       </div>
 
@@ -81,11 +85,11 @@ export function AuthForm() {
       <div className="mt-8 flex flex-wrap items-center justify-between gap-4">
         <p className="max-w-sm text-sm leading-7 text-[var(--muted)]">
           {mode === "login"
-            ? "Use the account you already created to access your relationship dashboard."
-            : "New accounts are created in Supabase Auth with email and password."}
+            ? "Use your existing password if you have already signed in before."
+            : "New or returning users can use a one-click magic link without worrying about email confirmation landing pages."}
         </p>
-        <SubmitButton pendingLabel={mode === "login" ? "Logging in..." : "Creating account..."}>
-          {mode === "login" ? "Continue" : "Create account"}
+        <SubmitButton pendingLabel={mode === "login" ? "Logging in..." : "Sending link..."}>
+          {mode === "login" ? "Continue" : "Email me a link"}
         </SubmitButton>
       </div>
 

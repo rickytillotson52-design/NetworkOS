@@ -30,9 +30,9 @@ export default async function LoginPage() {
           </p>
           <div className="mt-8 grid gap-4">
             {[
+              "Magic-link sign-in for the smoothest onboarding path",
+              "Password login still works for existing users",
               "Private records per signed-in user",
-              "Quick contact capture and edit flows",
-              "Interaction history on every contact",
               "Dashboard views for due follow-ups and recent activity",
             ].map((item) => (
               <div

@@ -35,12 +35,12 @@ export async function authAction(
 
   const { mode, email, password } = parsed.data;
 
-  if (mode === "signup") {
-    const { error } = await supabase.auth.signUp({
+  if (mode === "magic") {
+    const { error } = await supabase.auth.signInWithOtp({
       email,
-      password,
       options: {
         emailRedirectTo: `${getAppUrl()}/auth/callback`,
+        shouldCreateUser: true,
       },
     });
 
@@ -50,11 +50,14 @@ export async function authAction(
 
     return {
       success:
-        "Account created. If your project requires email confirmation, check your inbox before logging in.",
+        "Magic link sent. Open the email on the same device and you will be signed in automatically.",
     };
   }
 
-  const { error } = await supabase.auth.signInWithPassword({ email, password });
+  const { error } = await supabase.auth.signInWithPassword({
+    email,
+    password: password!,
+  });
 
   if (error) {
     return { error: error.message };
