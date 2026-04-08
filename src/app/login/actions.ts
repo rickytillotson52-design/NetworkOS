@@ -12,6 +12,7 @@ export async function authAction(
   formData: FormData,
 ): Promise<FormState> {
   const supabase = await createSupabaseServerClient();
+  const passwordValue = formData.get("password");
 
   if (!supabase) {
     return {
@@ -23,7 +24,7 @@ export async function authAction(
   const parsed = authSchema.safeParse({
     mode: formData.get("mode"),
     email: formData.get("email"),
-    password: formData.get("password"),
+    password: typeof passwordValue === "string" ? passwordValue : undefined,
   });
 
   if (!parsed.success) {
